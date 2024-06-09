@@ -1,23 +1,24 @@
 # faketik
 
-faketik generates and installs "fake tickets" to make missing titles re-appear on Nintendo 3DS family systems.
+faketik génère et installe des "faux tickets" pour faire réapparaître des titres manquants sur les systèmes de la famille Nintendo 3DS.
 
-License: MIT.
+Licence : MIT.
 
-# Frequently Asked Questions
+## Questions fréquemment posées
 
-## My game didn't appear / it found no titles to fix!
-The most likely reason for this is that the system does not know that the title exists.
+### Mon jeu n'est pas apparu / aucun titre à réparer n'a été trouvé !
+La raison la plus probable est que le système ne sait pas que le titre existe.
 
-If a Nintendo DSiWare title did not appear, this is likely due to an old CTRNAND image being restored, which means an older `/dbs/title.db` file was restored that does not contain the DSiWare title's information. The easiest method to fix this is to back up saves from TWLNAND, delete, and re-install the titles.
+Si un titre Nintendo DSiWare n'est pas apparu, c'est probablement parce qu'une ancienne image CTRNAND a été restaurée, ce qui signifie qu'un ancien fichier `/dbs/title.db` a été restauré ne contenant pas les informations du titre DSiWare. La méthode la plus simple pour résoudre ce problème est de sauvegarder les sauvegardes de TWLNAND, de supprimer et de réinstaller les titres.
 
-## The message "The External Title Database is not available." appeared!
-This happens because `title.db` does not exist where the Nintendo 3DS is attempting to load it (`/Nintendo 3DS/{id0}/{id1}/dbs/title.db`). The database must be restored or re-built. Tools to perform this easily don't exist yet, so it has to be done somewhat manually.
+### Le message "La base de données de titres externe n'est pas disponible." est apparu !
+Cela se produit parce que `title.db` n'existe pas à l'endroit où la Nintendo 3DS tente de le charger (`/Nintendo 3DS/{id0}/{id1}/dbs/title.db`). La base de données doit être restaurée ou reconstruite. Les outils pour effectuer cela facilement n'existent pas encore, donc cela doit être fait un peu manuellement.
 
-## It's installing a bunch of 0000000000000000 tickets / the message "Failed to allocate memory for the ticket buf." appeared!
-This means the external title database does not exist. This issue was fixed in v1.1.
+### Il installe une multitude de tickets 0000000000000000 / le message "Échec d'allocation de mémoire pour le tampon de ticket." est apparu !
+Cela signifie que la base de données de titres externe n'existe pas. Ce problème a été corrigé dans la version 1.1.
 
-## My game doesn't work!
-This is not due to faketik. This only creates tickets to make titles re-appear. It does not fix broken titles or missing seeds.
+### Mon jeu ne fonctionne pas !
+Ce n'est pas dû à faketik. Il ne crée que des tickets pour faire réapparaître des titres. Il ne répare pas les titres cassés ou les graines manquantes.
 
-There is a potential case for DLC titles with over 256 contents, since the current ticket only covers 256 bits in the Content Index. The best way to fix this is to delete the ticket and re-install a legitimate one from Nintendo eShop.
+Il existe un cas potentiel pour les titres DLC avec plus de 256 contenus, car le ticket actuel ne couvre que 256 bits dans l'index de contenu. La meilleure façon de résoudre ce problème est de supprimer le ticket et de réinstaller un ticket légitime depuis Nintendo eShop.
+
