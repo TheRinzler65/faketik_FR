@@ -41,9 +41,9 @@ GFXBUILD	:=	$(BUILD)
 #ROMFS		:=	romfs
 #GFXBUILD	:=	$(ROMFS)/gfx
 
-APP_TITLE	:=	faketik
-APP_DESCRIPTION	:=	Generates fake tickets to fix missing titles
-APP_AUTHOR	:=	ihaveamac
+APP_TITLE	:=	faketik_FR
+APP_DESCRIPTION	:=	Génère de faux tickets pour corriger les titres manquants.
+APP_AUTHOR	:=	ihaveamac / Rinzler (FR)
 
 #---------------------------------------------------------------------------------
 # options for code generation

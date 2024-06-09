@@ -29,16 +29,16 @@ void fix_unused_tickets(void) {
 	bool etd_available;
 	res = AM_QueryAvailableExternalTitleDatabase(&etd_available);
 	if (R_FAILED(res)) {
-		printf("Échec de la requête vers la base de données des titres externes.\n  AM_QueryAvailableExternalTitleDatabase:\n  0x%08lx", res);
+		printf("Echec de la requete vers la base de donnees des titres externes.\n  AM_QueryAvailableExternalTitleDatabase:\n  0x%08lx", res);
 		return;
 	}
 
 	if (!etd_available) {
 		puts(
-			"La base de données des titres externes n'est pas disponible.\n"
+			"La base de donnees des titres externes n'est pas disponible.\n"
 			"\n"
 			"Cela signifie que la 3DS pense qu'il n'y a aucun\n"
-			"logiciel installé.\n"
+			"logiciel installe.\n"
 		);
 		return;
 	}
@@ -46,12 +46,12 @@ void fix_unused_tickets(void) {
 	// get titles
 	res = AM_GetTitleCount(MEDIATYPE_NAND, &titlesNANDCount);
 	if (R_FAILED(res)) {
-		printf("Échec de l'appel AM_GetTitleCount(MEDIATYPE_NAND): 0x%08lx\n", res);
+		printf("Echec de l'appel AM_GetTitleCount(MEDIATYPE_NAND): 0x%08lx\n", res);
 		return;
 	}
 	res = AM_GetTitleCount(MEDIATYPE_SD, &titlesSDMCCount);
 	if (R_FAILED(res)) {
-		printf("Échec de l'appel AM_GetTitleCount(MEDIATYPE_SD): 0x%08lx\n", res);
+		printf("Echec de l'appel AM_GetTitleCount(MEDIATYPE_SD): 0x%08lx\n", res);
 		return;
 	}
 
@@ -59,19 +59,19 @@ void fix_unused_tickets(void) {
 
 	titles = calloc(titleTotalCount, sizeof(u64));
 	if (!titles) {
-		puts("Échec de l'allocation de mémoire pour les titres.\nThis should not happen.");
+		puts("Echec de l'allocation de memoire pour les titres.\nCela ne devrait pas arriver.");
 		return;
 	}
 
 	res = AM_GetTitleList(&titlesNANDRead, MEDIATYPE_NAND, titlesNANDCount, titles);
 	if (R_FAILED(res)) {
-		printf("Échec de l'appel AM_GetTitleList(MEDIATYPE_NAND): 0x%08lx\n", res);
+		printf("Echec de l'appel AM_GetTitleList(MEDIATYPE_NAND): 0x%08lx\n", res);
 		free(titles);
 		return;
 	}
 	res = AM_GetTitleList(&titlesSDMCRead, MEDIATYPE_SD, titlesSDMCCount, titles + titlesNANDRead);
 	if (R_FAILED(res)) {
-		printf("Échec de l'appel AM_GetTitleList(MEDIATYPE_SD): 0x%08lx\n", res);
+		printf("Echec de l'appel AM_GetTitleList(MEDIATYPE_SD): 0x%08lx\n", res);
 		free(titles);
 		return;
 	}
@@ -81,21 +81,21 @@ void fix_unused_tickets(void) {
 	// get tickets
 	res = AM_GetTicketCount(&ticketsCount);
 	if (R_FAILED(res)) {
-		printf("Échec de l'appel AM_GetTicketCount: 0x%08lx\n", res);
+		printf("Echec de l'appel AM_GetTicketCount: 0x%08lx\n", res);
 		free(titles);
 		return;
 	}
 
 	tickets = calloc(ticketsCount, sizeof(u64));
 	if (!tickets) {
-		puts("Échec de l'allocation de mémoire pour les tickets.\nCela ne devrait pas arriver.");
+		puts("Echec de l'allocation de memoire pour les tickets.\nCela ne devrait pas arriver.");
 		free(titles);
 		return;
 	}
 
 	missingTickets = calloc(titleTotalRead, sizeof(u64));
 	if (!missingTickets) {
-		puts("Échec de l'allocation de mémoire pour les tickets manquants.\nCela ne devrait pas arriver");
+		puts("Echec de l'allocation de memoire pour les tickets manquants.\nCela ne devrait pas arriver");
 		free(titles);
 		free(tickets);
 		return;
@@ -104,7 +104,7 @@ void fix_unused_tickets(void) {
 	res = AM_GetTicketList(&ticketsRead, ticketsCount, 0, tickets);
 
 	if (R_FAILED(res)) {
-		printf("Échec de l'appel AM_GetTicketList: 0x%08lx\n", res);
+		printf("Echec de l'appel AM_GetTicketList: 0x%08lx\n", res);
 		free(titles);
 		free(tickets);
 		free(missingTickets);
@@ -143,7 +143,7 @@ void fix_unused_tickets(void) {
 	// now we install the tickets...
 	buf = malloc(basetik_bin_size);
 	if (!buf) {
-		puts("Échec de l'allocation de mémoire pour le tampon de ticket.\nCela ne devrait pas arriver");
+		puts("Echec de l'allocation de memoire pour le tampon de ticket.\nCela ne devrait pas arriver");
 		free(missingTickets);
 		return;
 	}
@@ -154,25 +154,25 @@ void fix_unused_tickets(void) {
 		buf->titleID_be = __builtin_bswap64(missingTickets[i]);
 		res = AM_InstallTicketBegin(&ticketHandle);
 		if (R_FAILED(res)) {
-			printf("L'installation du ticket pour %016llx a échoué:\n  AM_InstallTicketBegin: 0x%08lx\n", missingTickets[i], res);
+			printf("L'installation du ticket pour %016llx a echoue:\n  AM_InstallTicketBegin: 0x%08lx\n", missingTickets[i], res);
 			res = AM_InstallTicketAbort(ticketHandle);
-			if (R_FAILED(res)) printf("Échec de l'appel AM_InstallTicketAbort: 0x%08lx\n", res);
+			if (R_FAILED(res)) printf("Echec de l'appel AM_InstallTicketAbort: 0x%08lx\n", res);
 			continue;
 		}
 
 		res = FSFILE_Write(ticketHandle, NULL, 0, buf, sizeof(struct ticket_dumb), 0);
 		if (R_FAILED(res)) {
-			printf("L'installation du ticket pour %016llx a échoué:\n  FSFILE_Write: 0x%08lx\n", missingTickets[i], res);
+			printf("L'installation du ticket pour %016llx a echoue:\n  FSFILE_Write: 0x%08lx\n", missingTickets[i], res);
 			res = AM_InstallTicketAbort(ticketHandle);
-			if (R_FAILED(res)) printf("Échec de l'appel AM_InstallTicketAbort: 0x%08lx\n", res);
+			if (R_FAILED(res)) printf("Echec de l'appel AM_InstallTicketAbort: 0x%08lx\n", res);
 			continue;
 		}
 
 		res = AM_InstallTicketFinish(ticketHandle);
 		if (R_FAILED(res)) {
-			printf("L'installation du ticket pour %016llx a échoué:\n  AM_InstallTicketFinish: 0x%08lx\n", missingTickets[i], res);
+			printf("L'installation du ticket pour %016llx a echoue:\n  AM_InstallTicketFinish: 0x%08lx\n", missingTickets[i], res);
 			res = AM_InstallTicketAbort(ticketHandle);
-			if (R_FAILED(res)) printf("Échec de l'appel AM_InstallTicketAbort: 0x%08lx\n", res);
+			if (R_FAILED(res)) printf("Echec de l'appel AM_InstallTicketAbort: 0x%08lx\n", res);
 			continue;
 		}
 
@@ -182,7 +182,7 @@ void fix_unused_tickets(void) {
 
 	free(buf);
 	free(missingTickets);
-	puts("Titres réparés avec succès.");
+	puts("Titres repares avec succes.");
 }
 
 int main(int argc, char* argv[])
@@ -191,13 +191,13 @@ int main(int argc, char* argv[])
 	gfxInitDefault();
 	consoleInit(GFX_TOP, NULL);
 
-	puts("faketik v1.1.2");
+	puts("faketik v1.1.2 FR");
 
-	puts("Début de la réparation des tickets...");
+	puts("Debut de la reparation des tickets...");
 	fix_unused_tickets();
 
 	puts("\nPOURQUOI MON JEU N'EST-IL PAS APPARU ?");
-	puts("  Visitez la page ci-dessous pour obtenir de l'aide !");
+	puts("  Visitez la page ci-dessous pour obtenir de\nl'aide !\n");
 	puts("    https://github.com/TheRinzler65/faketik_FR");
 	puts("\nAppuyez sur START ou B pour quitter.");
 
@@ -215,4 +215,4 @@ int main(int argc, char* argv[])
 	gfxExit();
 	amExit();
 	return 0;
-}
+}	
